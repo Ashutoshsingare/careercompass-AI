@@ -15,10 +15,10 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import wav from 'wav';
 
-export const GenerateVoiceOverInputSchema = z.string();
+const GenerateVoiceOverInputSchema = z.string();
 export type GenerateVoiceOverInput = z.infer<typeof GenerateVoiceOverInputSchema>;
 
-export const GenerateVoiceOverOutputSchema = z.object({
+const GenerateVoiceOverOutputSchema = z.object({
   media: z.string().describe('The base64 encoded WAV audio data URI.'),
 });
 export type GenerateVoiceOverOutput = z.infer<typeof GenerateVoiceOverOutputSchema>;

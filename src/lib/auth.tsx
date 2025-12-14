@@ -13,6 +13,7 @@ interface AuthContextType {
   login: (email: string, pass: string) => Promise<void>;
   signup: (name: string, email: string, pass: string) => Promise<void>;
   logout: () => void;
+  loginWithGoogle: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -71,6 +72,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   };
 
+  const loginWithGoogle = async () => {
+    setLoading(true);
+    await sleep(1000); // Simulate Google popup and auth
+    const googleUser: User = {
+        ...mockUser,
+        name: "Alex Doe",
+        email: "student@example.com"
+    };
+    localStorage.setItem('career-compass-user', JSON.stringify(googleUser));
+    setUser(googleUser);
+    toast({ title: "Signed in with Google", description: "Welcome to CareerCompass AI!" });
+    router.push('/dashboard');
+    setLoading(false);
+  }
+
   const logout = () => {
     localStorage.removeItem('career-compass-user');
     setUser(null);
@@ -78,7 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/login');
   };
 
-  const value = { user, loading, login, signup, logout };
+  const value = { user, loading, login, signup, logout, loginWithGoogle };
 
   return (
     <AuthContext.Provider value={value}>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
-import { Menu, LogOut, LayoutDashboard, Bot, CalendarCheck, Home as HomeIcon } from "lucide-react";
+import { Menu, LogOut, LayoutDashboard, CalendarCheck, Home as HomeIcon } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import Logo from "@/components/Logo";
 import { usePathname } from "next/navigation";
@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "Home", icon: HomeIcon, protected: false },
-  { href: "/ai-agent", label: "AI Agent", icon: Bot, protected: true },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, protected: true },
   { href: "/daily-tasks", label: "Daily Tasks", icon: CalendarCheck, protected: true },
 ];

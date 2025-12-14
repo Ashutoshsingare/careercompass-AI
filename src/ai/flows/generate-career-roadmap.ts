@@ -25,7 +25,14 @@ const GenerateCareerRoadmapOutputSchema = z.object({
   requiredSkills: z.array(z.string()).describe('The required skills for the career role.'),
   toolsAndTechnologies: z.array(z.string()).describe('The tools and technologies needed for the career role.'),
   monthWiseLearningRoadmap: z.array(z.string()).describe('A month-wise learning roadmap.'),
-  projectIdeas: z.array(z.string()).describe('Project ideas to build a portfolio.'),
+  projectIdeas: z
+    .array(
+      z.object({
+        idea: z.string().describe('The project idea.'),
+        category: z.enum(['Easy', 'Moderate', 'Advanced']).describe('The difficulty category of the project.'),
+      })
+    )
+    .describe('Project ideas to build a portfolio.'),
   internshipAndJobPreparationTips: z.string().describe('Tips for internship and job preparation.'),
 });
 
@@ -46,7 +53,7 @@ Output must include:
 2. Required skills
 3. Tools & technologies
 4. Month-wise learning roadmap
-5. Project ideas
+5. Project ideas categorized as 'Easy', 'Moderate', or 'Advanced'.
 6. Internship & job preparation tips
 Use simple language and real-world steps.`,
 });

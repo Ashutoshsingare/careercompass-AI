@@ -39,9 +39,9 @@ export const mockRoadmap: Roadmap = {
     "Month 8: Advanced Topics (GraphQL, WebSockets, Testing)",
   ],
   projectIdeas: [
-    "Beginner: To-Do List App with React",
-    "Intermediate: Blog Platform with MERN stack",
-    "Advanced: Real-time Chat Application",
+    { idea: "To-Do List App with React", category: "Easy" },
+    { idea: "Blog Platform with MERN stack", category: "Moderate" },
+    { idea: "Real-time Chat Application", category: "Advanced" },
   ],
   internshipAndJobPreparationTips:
     "Build a strong portfolio on GitHub. Practice data structures and algorithms on platforms like LeetCode. Create a polished LinkedIn profile and network with developers.",

@@ -8,11 +8,10 @@ type ProjectsProps = {
   roadmap: Roadmap;
 };
 
-const getProjectLevel = (idea: string) => {
-    const ideaLower = idea.toLowerCase();
-    if (ideaLower.includes('beginner')) return 'Beginner';
-    if (ideaLower.includes('intermediate')) return 'Intermediate';
-    if (ideaLower.includes('advanced')) return 'Advanced';
+const getProjectLevel = (category: 'Easy' | 'Moderate' | 'Advanced' | 'General') => {
+    if (category === 'Easy') return 'Easy';
+    if (category === 'Moderate') return 'Moderate';
+    if (category === 'Advanced') return 'Advanced';
     return 'General';
 }
 
@@ -27,16 +26,16 @@ export default function Projects({ roadmap }: ProjectsProps) {
       </CardHeader>
       <CardContent>
         <ul className="space-y-4">
-          {roadmap.projectIdeas.map((idea, index) => (
+          {roadmap.projectIdeas.map((project, index) => (
             <li key={index} className="flex items-start gap-4">
               <span className={`mt-1 flex h-2 w-2 translate-y-1 rounded-full ${
-                getProjectLevel(idea) === 'Beginner' ? 'bg-green-500' :
-                getProjectLevel(idea) === 'Intermediate' ? 'bg-yellow-500' :
+                getProjectLevel(project.category) === 'Easy' ? 'bg-green-500' :
+                getProjectLevel(project.category) === 'Moderate' ? 'bg-yellow-500' :
                 'bg-red-500'
               }`} />
               <div className="grid gap-1">
-                <p className="font-medium">{idea.replace(/(Beginner:|Intermediate:|Advanced:)\s*/i, '')}</p>
-                <p className="text-sm text-muted-foreground">{getProjectLevel(idea)} Level</p>
+                <p className="font-medium">{project.idea}</p>
+                <p className="text-sm text-muted-foreground">{getProjectLevel(project.category)} Level</p>
               </div>
             </li>
           ))}

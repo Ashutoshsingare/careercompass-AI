@@ -6,9 +6,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth";
-import { Loader2, Chrome } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import Logo from "@/components/Logo";
+
+const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.02-2.62 1.62-4.55 1.62-3.83 0-6.95-3.12-6.95-6.95s3.12-6.95 6.95-6.95c2.21 0 3.63.86 4.49 1.69l2.6-2.6C18.4 2.37 15.76.92 12.48.92c-6.17 0-11.17 4.92-11.17 11s5 11 11.17 11c6.47 0 10.9-4.52 10.9-10.98 0-.7-.07-1.35-.19-1.98z" />
+    </svg>
+);
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState("student@example.com");
@@ -83,7 +90,11 @@ export default function LoginPage() {
               </div>
             </div>
             <Button variant="outline" className="w-full" onClick={loginWithGoogle} disabled={loading}>
-              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Chrome className="mr-2 h-4 w-4" />}
+              {loading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <GoogleIcon className="mr-2 h-4 w-4" />
+              )}
               Google
             </Button>
           </CardContent>

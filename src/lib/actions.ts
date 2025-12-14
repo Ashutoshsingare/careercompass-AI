@@ -2,6 +2,7 @@
 
 import { generateCareerRoadmap } from "@/ai/flows/generate-career-roadmap";
 import { generateDailyTasks } from "@/ai/flows/generate-daily-tasks";
+import { generateVoiceOver } from "@/ai/flows/generate-voice-over";
 import {
   mockRoadmap,
   mockDailyTask,
@@ -79,4 +80,17 @@ export async function saveReflection(reflection: string) {
   console.log("Saving reflection:", reflection);
   // In a real app, update the daily task record in the DB
   return { success: true };
+}
+
+export async function generateVoiceOverAction(text: string) {
+  if (!text) {
+    return { error: 'Text is required for voice over.' };
+  }
+  try {
+    const audio = await generateVoiceOver(text);
+    return { data: audio.media };
+  } catch (error) {
+    console.error('Error generating voice over:', error);
+    return { error: 'Failed to generate voice over.' };
+  }
 }

@@ -1,12 +1,12 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Bot, Loader2, Send, CheckCircle, Route, CalendarCheck } from "lucide-react";
-import { generateRoadmapAction } from "@/lib/actions";
+import { Bot, Loader2, Send, CheckCircle, Route, CalendarCheck, Volume2, Pause, Play } from "lucide-react";
+import { generateRoadmapAction, generateVoiceOverAction } from "@/lib/actions";
 import type { GenerateCareerRoadmapOutput } from "@/ai/flows/generate-career-roadmap";
 import { RoadmapDisplay } from "@/app/ai-agent/RoadmapDisplay";
 import { useToast } from "@/hooks/use-toast";
@@ -17,12 +17,77 @@ const examplePrompts = [
   "Career roadmap for a product manager",
 ];
 
+function roadmapToText(roadmap: GenerateCareerRoadmapOutput): string {
+    let text = `Here is your roadmap for becoming a ${roadmap.careerRole}. `;
+    text += `First, you'll need to learn the following skills: ${roadmap.requiredSkills.join(", ")}. `;
+    text += `The tools and technologies you should get familiar with are: ${roadmap.toolsAndTechnologies.join(", ")}. `;
+    text += "Here is a suggested learning plan: ";
+    roadmap.monthWiseLearningRoadmap.forEach((phase, index) => {
+        text += `Phase ${index + 1}: ${phase}. `;
+    });
+    text += "To build your portfolio, here are some project ideas: ";
+    roadmap.projectIdeas.forEach(p => {
+        text += `${p.category} level: ${p.idea}. `;
+    });
+    text += `Finally, here are some tips for your internship and job search: ${roadmap.internshipAndJobPreparationTips}`;
+    return text;
+}
+
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [roadmap, setRoadmap] = useState<GenerateCareerRoadmapOutput | null>(null);
   const [prompt, setPrompt] = useState("");
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      const onPlay = () => setIsPlaying(true);
+      const onPause = () => setIsPlaying(false);
+      const onEnded = () => setIsPlaying(false);
+
+      audioElement.addEventListener('play', onPlay);
+      audioElement.addEventListener('pause', onPause);
+      audioElement.addEventListener('ended', onEnded);
+
+      return () => {
+        audioElement.removeEventListener('play', onPlay);
+        audioElement.removeEventListener('pause', onPause);
+        audioElement.removeEventListener('ended', onEnded);
+      };
+    }
+  }, [audioUrl]);
+
+  const handlePlayPause = () => {
+    if (audioRef.current) {
+        if (isPlaying) {
+            audioRef.current.pause();
+        } else {
+            audioRef.current.play();
+        }
+    }
+  };
+
+  const handleGenerateVoiceOver = async (text: string) => {
+    setIsAudioLoading(true);
+    setAudioUrl(null);
+    const result = await generateVoiceOverAction(text);
+    if (result.error) {
+      toast({
+        variant: "destructive",
+        title: "Audio Error",
+        description: result.error,
+      });
+    } else if (result.data) {
+      setAudioUrl(result.data);
+    }
+    setIsAudioLoading(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent, currentPrompt?: string) => {
     e.preventDefault();
@@ -31,8 +96,13 @@ export default function Home() {
 
     setLoading(true);
     setRoadmap(null);
+    setAudioUrl(null);
+    setIsPlaying(false);
+    if(audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+    }
     
-
     const formData = new FormData();
     formData.append("careerPath", finalPrompt);
 
@@ -46,6 +116,7 @@ export default function Home() {
       });
     } else if (result.data) {
       setRoadmap(result.data);
+      handleGenerateVoiceOver(roadmapToText(result.data));
     }
     setLoading(false);
     setPrompt("");
@@ -104,7 +175,25 @@ export default function Home() {
               </Card>
             )}
 
-            {roadmap && <RoadmapDisplay roadmap={roadmap} />}
+            {roadmap && (
+              <>
+                <div className="flex items-center justify-end mb-2">
+                  {isAudioLoading ? (
+                      <Button variant="outline" size="icon" disabled>
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                      </Button>
+                  ) : audioUrl && (
+                      <Button variant="outline" size="icon" onClick={handlePlayPause}>
+                          {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                      </Button>
+                  )}
+                </div>
+                <RoadmapDisplay roadmap={roadmap} />
+              </>
+            )}
+
+            {audioUrl && <audio ref={audioRef} src={audioUrl} />}
+
 
             {!loading && !roadmap && (
               <div className="hidden md:block">
@@ -153,11 +242,11 @@ export default function Home() {
 
             <Card className="shadow-md hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center gap-4">
-                <CheckCircle className="w-8 h-8 text-primary" />
-                <CardTitle className="font-headline">Progress Tracking</CardTitle>
+                <Volume2 className="w-8 h-8 text-primary" />
+                <CardTitle className="font-headline">Voice-Over</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">Visualize your journey, track completed tasks, and monitor your skill development with our dashboard.</p>
+                <p className="text-muted-foreground">Listen to your generated career roadmap with our text-to-speech feature for hands-free learning.</p>
               </CardContent>
             </Card>
           </div>

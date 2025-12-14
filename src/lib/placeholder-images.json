@@ -1,3 +1,10 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "Abstract background representing career paths",
+      "imageUrl": "https://images.unsplash.com/photo-1684503830683-108f3e0fd03f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YWJzdHJhY3QlMjB0ZWNobm9sb2d5fGVufDB8fHx8MTc2NTcxNzc2OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract technology"
+    }
+  ]
 }

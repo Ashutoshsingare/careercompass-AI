@@ -81,9 +81,21 @@ export function RoadmapDisplay({ roadmap }: RoadmapDisplayProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2 list-disc pl-5 text-muted-foreground">
-            {roadmap.projectIdeas.map((idea, i) => (
-              <li key={i}>{idea}</li>
+          <ul className="space-y-4">
+            {roadmap.projectIdeas.map((project, i) => (
+              <li key={i} className="flex items-center justify-between">
+                <span>{project.idea}</span>
+                <Badge 
+                  className={
+                    project.category === 'Easy' ? 'bg-green-100 text-green-800' :
+                    project.category === 'Moderate' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-red-100 text-red-800'
+                  }
+                  variant="outline"
+                >
+                  {project.category}
+                </Badge>
+              </li>
             ))}
           </ul>
         </CardContent>

@@ -8,6 +8,7 @@ import {
   mockDailyTask,
   mockUser,
 } from "@/lib/mock-data";
+import { getUserData, saveUserAndRoadmap } from "@/lib/db";
 import { sleep } from "./utils";
 import type { Roadmap, DailyTask, User } from "./types";
 
@@ -45,16 +46,24 @@ export async function generateDailyTasksAction(careerPath: string) {
 }
 
 export async function getDashboardData(userId: string): Promise<{
-  user: User;
+  user: User | null;
   roadmap: Roadmap | null;
   progress: number;
 }> {
   await sleep(500); // Simulate DB query
-  // In a real app, query the database for this user's data
-  const user = mockUser;
-  const roadmap = mockRoadmap;
-  const progress = 35; // Mock progress
-  return { user, roadmap, progress };
+  // Try reading persisted data first
+  try {
+    const { user, roadmap } = await getUserData(userId);
+    if (user && roadmap) {
+      const progress = Math.floor(Math.random() * 80) + 10;
+      return { user, roadmap, progress };
+    }
+  } catch (e) {
+    // ignore and return null to show form
+  }
+
+  // Return null to trigger ProfileForm
+  return { user: null, roadmap: null, progress: 0 };
 }
 
 export async function getDailyTasks(

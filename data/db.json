@@ -1,0 +1,89 @@
+{
+  "users": [
+    {
+      "id": "user_1765997116242",
+      "name": "Ashutosh",
+      "email": "asdfgh@gmail.com",
+      "careerGoal": "get first internship",
+      "createdAt": "2025-12-17T18:48:58.141Z"
+    }
+  ],
+  "roadmaps": [
+    {
+      "id": "rm-1765997351470",
+      "userId": "user_1765997116242",
+      "careerPath": "data science",
+      "careerRole": "Data Scientist",
+      "requiredSkills": [
+        "Mathematics (Linear Algebra, Calculus, Statistics, Probability)",
+        "Programming (Python/R)",
+        "Data Manipulation & Cleaning",
+        "Data Visualization",
+        "Machine Learning (Supervised, Unsupervised, Reinforcement Learning basics)",
+        "Deep Learning (introductory concepts)",
+        "Database Management (SQL)",
+        "Communication & Storytelling",
+        "Problem Solving",
+        "Critical Thinking"
+      ],
+      "toolsAndTechnologies": [
+        "Python (Pandas, NumPy, SciPy, Scikit-learn, Matplotlib, Seaborn, Plotly)",
+        "R (tidyverse, ggplot2)",
+        "SQL (PostgreSQL, MySQL)",
+        "Jupyter Notebooks / Google Colab",
+        "Tableau / Power BI (for advanced visualization)",
+        "Git/GitHub",
+        "Cloud Platforms (AWS Sagemaker, Google Cloud AI Platform, Azure ML - basic understanding)",
+        "TensorFlow / Keras / PyTorch (for Deep Learning)"
+      ],
+      "monthWiseLearningRoadmap": [
+        "Month 1-2: Foundations - Learn Python fundamentals (syntax, data structures, functions, OOP). Refresh Linear Algebra, Calculus, Probability, and Statistics relevant to data science.",
+        "Month 3-4: Data Handling - Master Pandas and NumPy for data manipulation, cleaning, and analysis. Learn data visualization with Matplotlib and Seaborn. Start with SQL for querying databases.",
+        "Month 5-6: Core Machine Learning - Understand Machine Learning concepts. Implement algorithms like Linear Regression, Logistic Regression, Decision Trees, Random Forests, SVM using Scikit-learn. Learn model evaluation metrics and cross-validation.",
+        "Month 7-8: Advanced ML & Deep Learning - Explore clustering algorithms (K-Means), dimensionality reduction (PCA). Introduce Deep Learning concepts, neural networks, and basic implementation with TensorFlow/Keras.",
+        "Month 9-10: Big Data & Deployment Basics - Get an overview of Big Data technologies (e.g., Apache Spark basics, Hadoop concepts if interested). Learn about deploying models using cloud platforms (AWS/GCP/Azure basics). Master Git/GitHub for version control.",
+        "Month 11-12: Specialization & Portfolio - Dive deeper into a specific area (e.g., Natural Language Processing, Computer Vision, Time Series Analysis). Build 2-3 significant end-to-end data science projects. Refine communication and presentation skills for technical explanations."
+      ],
+      "projectIdeas": [
+        {
+          "idea": "Titanic Survival Prediction: Predict passenger survival based on various features using classification algorithms.",
+          "category": "Easy"
+        },
+        {
+          "idea": "House Price Prediction: Build a regression model to predict house prices based on attributes like size, location, and number of rooms.",
+          "category": "Easy"
+        },
+        {
+          "idea": "Iris Flower Classification: A classic dataset to practice basic classification models like K-Nearest Neighbors or Logistic Regression.",
+          "category": "Easy"
+        },
+        {
+          "idea": "Customer Churn Prediction: Predict which customers are likely to leave a service using various classification models.",
+          "category": "Moderate"
+        },
+        {
+          "idea": "Sentiment Analysis of Movie Reviews: Classify movie reviews as positive or negative using natural language processing techniques.",
+          "category": "Moderate"
+        },
+        {
+          "idea": "Sales Forecasting: Predict future sales for a retail store or product using time series analysis techniques.",
+          "category": "Moderate"
+        },
+        {
+          "idea": "Image Classification with Deep Learning: Build a Convolutional Neural Network (CNN) to classify images (e.g., distinguish between cats and dogs, or different types of clothing).",
+          "category": "Advanced"
+        },
+        {
+          "idea": "Recommendation System: Develop a basic movie or product recommendation engine using collaborative filtering or content-based filtering.",
+          "category": "Advanced"
+        },
+        {
+          "idea": "End-to-End ML Pipeline with Deployment: Create a predictive model for a real-world problem (e.g., credit card fraud detection) and deploy it as a simple web application using Flask/Streamlit.",
+          "category": "Advanced"
+        }
+      ],
+      "internshipAndJobPreparationTips": "Build a robust portfolio showcasing diverse projects with clean code and clear explanations. Actively participate in Kaggle competitions to gain practical experience and exposure. Deeply understand the theoretical foundations of machine learning algorithms, not just how to use them. Practice coding challenges on platforms like LeetCode and HackerRank, focusing on Python and SQL. Network with professionals in the field through LinkedIn, industry events, and college career fairs. Tailor your resume and cover letter to each job application, highlighting relevant skills and project experiences. Prepare for behavioral questions and case studies commonly asked in data science interviews. Seek out internships diligently; they provide invaluable real-world experience and often lead to full-time offers. Practice explaining your projects and thought process clearly and concisely, focusing on business impact.",
+      "createdAt": "2025-12-17T18:49:11.470Z"
+    }
+  ]
+}

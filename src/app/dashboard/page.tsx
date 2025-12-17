@@ -10,6 +10,7 @@ import CareerOverview from "./CareerOverview";
 import RoadmapView from "./RoadmapView";
 import Projects from "./Projects";
 import ProgressTracker from "./ProgressTracker";
+import ProfileForm from "./ProfileForm";
 
 export default function DashboardPage() {
   const { user: authUser } = useAuth();
@@ -59,11 +60,13 @@ export default function DashboardPage() {
             </div>
           </>
         ) : (
-          <div className="text-center py-20">
-             <h2 className="text-2xl font-semibold">No Roadmap Found</h2>
-             <p className="text-muted-foreground mt-2">
-                It looks like you haven&apos;t generated a career roadmap yet.
-             </p>
+          <div className="py-8">
+            <ProfileForm
+              authUser={authUser}
+              onCreate={({ user, roadmap, progress }) => {
+                setData({ user, roadmap, progress });
+              }}
+            />
           </div>
         )}
       </div>

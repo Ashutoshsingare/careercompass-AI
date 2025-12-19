@@ -1,66 +1,77 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { generateCareerRoadmap } from "@/ai/flows/generate-career-roadmap";
-import { saveUserAndRoadmap } from "@/lib/db";
 
+// Simple prototype - no AI calls, just return structured data
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, careerRole, careerGoal, skills, userId } = body;
-    if (!careerRole) return NextResponse.json({ error: "careerRole is required" }, { status: 400 });
-
-    const uid = userId || `u-${Date.now()}`;
-    const user = {
-      id: uid,
-      name: name || "Anonymous",
-      email: email || "",
-      careerGoal: careerGoal || undefined,
-      createdAt: new Date().toISOString(),
-    };
-
-    const skillList = (skills || "").split(",").map((s: string) => s.trim()).filter(Boolean);
-
-    let aiRoadmap;
-    try {
-      aiRoadmap = await generateCareerRoadmap({ careerPath: careerRole });
-    } catch (aiError) {
-      console.warn("AI generation failed, using fallback:", aiError);
-      aiRoadmap = null;
+    const { name, email, careerRole, careerGoal, skills } = body;
+    
+    if (!careerRole) {
+      return NextResponse.json({ error: "careerRole is required" }, { status: 400 });
     }
 
-    const roadmap = {
-      id: `rm-${Date.now()}`,
-      userId: uid,
-      careerPath: careerRole,
-      careerRole: aiRoadmap?.careerRole || careerRole,
-      requiredSkills: aiRoadmap?.requiredSkills || (skillList.length ? skillList : ["Fundamentals", "Problem Solving"]),
-      toolsAndTechnologies: aiRoadmap?.toolsAndTechnologies || (skillList.length ? skillList : ["Development Tools", "Git", "IDE"]),
-      monthWiseLearningRoadmap: aiRoadmap?.monthWiseLearningRoadmap || [
-        `Month 1: Learn ${careerRole} fundamentals`,
-        `Month 2: Build practical projects in ${careerRole}`,
-        `Month 3: Master advanced ${careerRole} concepts`,
-      ],
-      projectIdeas: aiRoadmap?.projectIdeas || (
-        skillList.length 
-          ? skillList.map((s: string, idx: number) => ({
-              idea: `Build a ${s} mini-project`,
-              category: idx === 0 ? "Easy" : idx === 1 ? "Moderate" : "Advanced",
-            }))
-          : [
-              { idea: "Build a beginner-friendly project", category: "Easy" },
-              { idea: "Create an intermediate-level application", category: "Moderate" },
-              { idea: "Develop an advanced portfolio project", category: "Advanced" },
-            ]
-      ),
-      internshipAndJobPreparationTips: aiRoadmap?.internshipAndJobPreparationTips || "Build a strong portfolio, practice interviews, network with professionals, and contribute to open source.",
+    const skillList = (skills || "")
+      .split(",")
+      .map((s: string) => s.trim())
+      .filter(Boolean);
+
+    const uid = `user_${Date.now()}`;
+    
+    const user = {
+      id: uid,
+      name: name || "User",
+      email: email || "",
+      careerGoal: careerGoal || "Career Development",
       createdAt: new Date().toISOString(),
     };
 
-    await saveUserAndRoadmap(user as any, roadmap as any);
+    const roadmap = {
+      id: `rm_${Date.now()}`,
+      userId: uid,
+      careerPath: careerRole,
+      careerRole: careerRole,
+      requiredSkills: skillList.length 
+        ? skillList 
+        : ["Fundamentals", "Problem Solving", "Communication"],
+      toolsAndTechnologies: [
+        "GitHub",
+        "VS Code",
+        "Docker",
+        "Linux",
+        ...(skillList.length ? skillList : []),
+      ],
+      monthWiseLearningRoadmap: [
+        `Month 1: Master ${careerRole} basics and core concepts`,
+        `Month 2: Build 2-3 projects to solidify your skills`,
+        `Month 3: Contribute to open source and network`,
+        `Month 4-6: Advanced topics and interview preparation`,
+      ],
+      projectIdeas: [
+        {
+          idea: `Build a ${careerRole} beginner project`,
+          category: "Easy",
+        },
+        {
+          idea: `Create an intermediate ${careerRole} application`,
+          category: "Moderate",
+        },
+        {
+          idea: `Develop a complex ${careerRole} system`,
+          category: "Advanced",
+        },
+      ],
+      internshipAndJobPreparationTips:
+        "1. Build a portfolio of 3-5 projects\n2. Practice coding interviews on LeetCode\n3. Network with professionals on LinkedIn\n4. Contribute to open source on GitHub\n5. Keep learning new technologies",
+      createdAt: new Date().toISOString(),
+    };
 
     return NextResponse.json({ user, roadmap });
   } catch (error) {
     console.error("API error:", error);
-    return NextResponse.json({ error: "Failed to generate and save roadmap" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to generate roadmap" },
+      { status: 500 }
+    );
   }
 }

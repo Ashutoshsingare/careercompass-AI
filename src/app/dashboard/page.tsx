@@ -1,75 +1,59 @@
 "use client";
 
-import { AuthGuard } from "@/components/auth/AuthGuard";
-import { useAuth } from "@/lib/auth";
 import { useEffect, useState } from "react";
 import type { Roadmap, User } from "@/lib/types";
-import { getDashboardData } from "@/lib/actions";
 import { Loader2 } from "lucide-react";
-import CareerOverview from "./CareerOverview";
 import RoadmapView from "./RoadmapView";
-import Projects from "./Projects";
-import ProgressTracker from "./ProgressTracker";
 import ProfileForm from "./ProfileForm";
 
 export default function DashboardPage() {
-  const { user: authUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<{
     user: User | null;
     roadmap: Roadmap | null;
-    progress: number;
-  }>({ user: null, roadmap: null, progress: 0 });
+  }>({ user: null, roadmap: null });
 
   useEffect(() => {
-    if (authUser) {
-      const fetchData = async () => {
-        setLoading(true);
-        const dashboardData = await getDashboardData(authUser.id);
-        setData(dashboardData);
-        setLoading(false);
-      };
-      fetchData();
+    // Load from localStorage on mount
+    const user = localStorage.getItem("cc_user");
+    const roadmap = localStorage.getItem("cc_roadmap");
+    
+    if (user && roadmap) {
+      setData({
+        user: JSON.parse(user),
+        roadmap: JSON.parse(roadmap)
+      });
     }
-  }, [authUser]);
+    setLoading(false);
+  }, []);
+
+  const handleCreate = (newData: any) => {
+    setData(newData);
+  };
 
   return (
-    <AuthGuard>
-      <div className="container mx-auto max-w-7xl py-12 px-4">
-        {loading ? (
-          <div className="flex h-[calc(100vh-10rem)] w-full items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    <div className="container mx-auto max-w-7xl py-12 px-4">
+      {loading ? (
+        <div className="flex h-[calc(100vh-10rem)] w-full items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : data.user && data.roadmap ? (
+        <>
+          <h1 className="text-3xl font-bold font-headline mb-2">
+            Welcome, {data.user.name}!
+          </h1>
+          <p className="text-muted-foreground mb-8">
+            Your career roadmap for <span className="font-semibold">{data.roadmap.careerRole}</span> is ready!
+          </p>
+          <div className="space-y-8">
+            <RoadmapView roadmap={data.roadmap} />
           </div>
-        ) : data.user && data.roadmap ? (
-          <>
-            <h1 className="text-3xl font-bold font-headline mb-2">
-              Welcome back, {data.user.name.split(" ")[0]}!
-            </h1>
-            <p className="text-muted-foreground mb-8">
-              Here&apos;s your career journey at a glance. Keep up the great work!
-            </p>
-            <div className="grid gap-8 lg:grid-cols-3">
-              <div className="lg:col-span-2 space-y-8">
-                <CareerOverview user={data.user} roadmap={data.roadmap} />
-                <RoadmapView roadmap={data.roadmap} />
-                <Projects roadmap={data.roadmap} />
-              </div>
-              <div className="lg:col-span-1">
-                <ProgressTracker progress={data.progress} />
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="py-8">
-            <ProfileForm
-              authUser={authUser}
-              onCreate={({ user, roadmap, progress }) => {
-                setData({ user, roadmap, progress });
-              }}
-            />
-          </div>
-        )}
-      </div>
-    </AuthGuard>
+        </>
+      ) : (
+        <div className="py-8">
+          <ProfileForm onCreate={handleCreate} />
+        </div>
+      )}
+    </div>
   );
 }

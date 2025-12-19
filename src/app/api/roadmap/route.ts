@@ -21,10 +21,12 @@ export async function POST(req: NextRequest) {
     const skillList = (skills || "").split(",").map((s: string) => s.trim()).filter(Boolean);
 
     let aiRoadmap;
+    let aiError: any = null;
     try {
       aiRoadmap = await generateCareerRoadmap({ careerPath: careerRole });
-    } catch (aiError) {
-      console.warn("AI generation failed, using fallback:", aiError);
+    } catch (err) {
+      aiError = err;
+      console.error("AI generation failed:", err);
       aiRoadmap = null;
     }
 
@@ -60,7 +62,11 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ user, roadmap });
   } catch (error) {
-    console.error("API error:", error);
-    return NextResponse.json({ error: "Failed to generate and save roadmap" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("API error:", errorMessage, error);
+    return NextResponse.json({ 
+      error: "Failed to generate and save roadmap",
+      details: errorMessage
+    }, { status: 500 });
   }
 }
